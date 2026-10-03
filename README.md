@@ -2,6 +2,8 @@
 
 A mobile-first weekly budgeting app for students, built with **React, TypeScript, Vite and Tailwind CSS**. It runs entirely in the browser, needs no account or backend, and can be installed on a phone's home screen.
 
+**Live demo: [panda-budget.netlify.app](https://panda-budget.netlify.app)** (best on a phone, where you can add it to your home screen)
+
 I originally built it as a personalised app for one real user, a student living on a weekly budget, and this repository is the general version.
 
 ![Home, add-a-spend and stats screens](docs/preview.png)
