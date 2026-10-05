@@ -4,7 +4,9 @@ A mobile-first weekly budgeting app for students, built with **React, TypeScript
 
 **Live demo: [panda-budget.netlify.app](https://panda-budget.netlify.app)** (best on a phone, where you can add it to your home screen)
 
-I originally built it as a personalised app for one real user, a student living on a weekly budget, and this repository is the general version.
+I originally made it as a personalised app for one real user, a student living on a weekly budget, and this repository is the general version.
+
+**How I built it:** I came up with the idea and the requirements, and built the app with Claude, an AI coding assistant, as a pair-programmer. I then deployed it on Netlify. I'm now working through the codebase in depth so I understand and own every part of it.
 
 ![Home, add-a-spend and stats screens](docs/preview.png)
 
@@ -18,7 +20,7 @@ I originally built it as a personalised app for one real user, a student living 
 - **Backups.** Export and import all data as JSON from Settings.
 - **Installable (PWA).** It has a web app manifest and icons, so it opens full-screen from the home screen.
 
-## Design decisions
+## How it works
 
 - **Derived state, not stored totals.** Weekly totals and the stash balance are recalculated from the list of expenses on every render. They're never saved separately, so editing or deleting an old expense can never leave a balance out of sync.
 - **Budget history.** Changing the weekly budget records the date it changed from. Past weeks keep the target they actually had, so old weeks don't suddenly look over or under budget.
