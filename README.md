@@ -38,6 +38,7 @@ React 18 · TypeScript · Vite · Tailwind CSS · lucide-react icons · Netlify 
 npm install
 npm run dev        # also prints a network address you can open on your phone (same Wi-Fi)
 npm run typecheck  # TypeScript checks
+npm test           # unit tests (Vitest)
 npm run build      # production build in dist/
 ```
 

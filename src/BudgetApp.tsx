@@ -40,7 +40,7 @@ const LATTE_NOTE = 'Latte';
 
 /* ───────────────────────── Types ───────────────────────── */
 
-interface Expense {
+export interface Expense {
   id: string;
   amount: number;
   category: CategoryKey;
@@ -50,7 +50,7 @@ interface Expense {
   fromStash?: boolean; // paid out of the Bamboo Stash instead of the weekly budget
 }
 
-interface AppData {
+export interface AppData {
   version: 1;
   name: string;
   lattePrice: number;
@@ -68,28 +68,28 @@ type SheetState = { type: 'add' } | { type: 'edit'; id: string } | { type: 'sett
 /* ───────────────────────── Date + money helpers ───────────────────────── */
 
 const pad = (n: number) => String(n).padStart(2, '0');
-const round2 = (n: number) => Math.round(n * 100) / 100;
+export const round2 = (n: number) => Math.round(n * 100) / 100;
 const gbp = (n: number) => `${n < 0 ? '-' : ''}£${Math.abs(n).toFixed(2)}`;
 
-const startOfDay = (d: Date) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
-const addDays = (d: Date, n: number) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
-const startOfWeek = (d: Date) => { const x = startOfDay(d); return addDays(x, -((x.getDay() + 6) % 7)); }; // Monday
-const sameDay = (a: Date, b: Date) => startOfDay(a).getTime() === startOfDay(b).getTime();
-const toInputDate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const fromInputDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+export const startOfDay = (d: Date) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+export const addDays = (d: Date, n: number) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+export const startOfWeek = (d: Date) => { const x = startOfDay(d); return addDays(x, -((x.getDay() + 6) % 7)); }; // Monday
+export const sameDay = (a: Date, b: Date) => startOfDay(a).getTime() === startOfDay(b).getTime();
+export const toInputDate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+export const fromInputDate = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d, 12); };
 const fmtShort = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 const fmtDay = (d: Date) => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 
-const inRange = (iso: string, start: Date, end: Date) => {
+export const inRange = (iso: string, start: Date, end: Date) => {
   const t = new Date(iso).getTime();
   return t >= start.getTime() && t < end.getTime();
 };
 
 /** Budget spending in [start, end). Stash spending is excluded on purpose. */
-const sumRange = (expenses: Expense[], start: Date, end: Date) =>
+export const sumRange = (expenses: Expense[], start: Date, end: Date) =>
   round2(expenses.filter(e => !e.fromStash && inRange(e.date, start, end)).reduce((s, e) => s + e.amount, 0));
 
-const budgetFor = (budgets: AppData['budgets'], weekStart: Date) => {
+export const budgetFor = (budgets: AppData['budgets'], weekStart: Date) => {
   let amount = budgets[0]?.amount ?? 100;
   for (const b of budgets) if (new Date(b.from).getTime() <= weekStart.getTime()) amount = b.amount;
   return amount;
@@ -97,7 +97,7 @@ const budgetFor = (budgets: AppData['budgets'], weekStart: Date) => {
 
 /* ───────────────────────── Persistence ───────────────────────── */
 
-function freshData(now = new Date()): AppData {
+export function freshData(now = new Date()): AppData {
   const monday = startOfWeek(now);
   const isMonday = sameDay(now, monday);
   return {
@@ -114,7 +114,7 @@ function freshData(now = new Date()): AppData {
   };
 }
 
-function isAppData(x: unknown): x is AppData {
+export function isAppData(x: unknown): x is AppData {
   const d = x as AppData;
   return !!d && d.version === 1 && typeof d.name === 'string' && typeof d.lattePrice === 'number'
     && typeof d.startedAt === 'string' && typeof d.createdAt === 'string' && typeof d.vaultFrom === 'string'
@@ -134,7 +134,7 @@ function loadData(): AppData {
 
 /* ───────────────────────── Derived numbers ───────────────────────── */
 
-function computeWeek(data: AppData, now: Date) {
+export function computeWeek(data: AppData, now: Date) {
   const start = startOfWeek(now);
   const end = addDays(start, 7);
   const budget = budgetFor(data.budgets, start);
@@ -157,7 +157,7 @@ function computeWeek(data: AppData, now: Date) {
 
 /** Stash = every full week's unspent budget, minus anything paid from the stash.
  *  Derived (not stored), so editing or deleting an old expense can never corrupt it. */
-function computeVault(data: AppData, now: Date) {
+export function computeVault(data: AppData, now: Date) {
   const cur = startOfWeek(now);
   let w = new Date(data.vaultFrom);
   let earned = 0;
@@ -170,7 +170,7 @@ function computeVault(data: AppData, now: Date) {
   return { earned: round2(earned), balance: Math.max(0, round2(earned - paidFromStash)) };
 }
 
-function computeStats(data: AppData, now: Date) {
+export function computeStats(data: AppData, now: Date) {
   const cur = startOfWeek(now);
   const started = new Date(data.startedAt);
 
